@@ -17,7 +17,7 @@ public class DBManager implements UserDaoImpl {
     private static final String user = "postgres";
     private static final String password = "7482040607";
 
-    public static Connection connect() {
+    private static Connection connect() {
         Connection connection = null;
         try {
             connection = DriverManager.getConnection(url, user, password);
@@ -29,14 +29,14 @@ public class DBManager implements UserDaoImpl {
         return connection;
     }
 
-
-    public boolean isUserRegistered(Long chatId) {
-        String query = "SELECT COUNT(*) FROM users WHERE chat_id = ?";
+    public boolean isUserRegistered(Long chatId, String username) {
+        String query = "SELECT COUNT(*) FROM users WHERE chat_id = ?, username = ?";
 
         try (Connection connection = connect();
              PreparedStatement preparedStatement = connection.prepareStatement(query)) {
 
             preparedStatement.setLong(1, chatId);
+            preparedStatement.setString(2, username);
             ResultSet resultSet = preparedStatement.executeQuery();
 
             if (resultSet.next() && resultSet.getInt(1) > 0) {

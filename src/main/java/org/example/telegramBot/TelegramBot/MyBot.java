@@ -27,11 +27,10 @@ public class MyBot extends TelegramLongPollingBot {
         try {
             // Создаём объект SendMessage с ID чата и текстом
             SendMessage message = new SendMessage(chatId.toString(), text);
-
             // Отправляем сообщение через execute()
             execute(message);
         } catch (TelegramApiException e) {
-            e.printStackTrace(); // Логируем ошибки, если они возникли
+            e.printStackTrace();
         }
     }
 
@@ -56,11 +55,11 @@ public class MyBot extends TelegramLongPollingBot {
                                      "/EnKattaChochoktor - выводит список всех участников с самым большим чочок.\n\nПриятного общения с ботом!";
                 sendMessage(chatId, infoMessage);
             } else if (messageText.equals("/chochok")) {
-                if (!dbManager.isUserRegistered(chatId)) {
+                if (!dbManager.isUserRegistered(chatId, username)) {
                     dbManager.registerUser(chatId, username, firstName, lastName);
                     sendMessage(chatId, "Вы были успешно зарегистрированы! Теперь можно использовать команду /chochok.");
                 } else {
-                    updateChochok(chatId);
+                    updateChochok(chatId, username);
                 }
             } else if (messageText.equals("EnKattaChochoktor")) {
                 dbManager.getAllUsersSortedByChochok(chatId);
@@ -70,14 +69,14 @@ public class MyBot extends TelegramLongPollingBot {
 
     }
 
-    private void updateChochok(Long chatId) {
+    private void updateChochok(Long chatId, String username) {
 
         DBManager dbManager = new DBManager();
 
         int randomChange = (int) (Math.random() * 21) - 10;  // Генерируем случайное число от -10 до +10
         dbManager.updateChochok(chatId, randomChange);
         int chochok = dbManager.getChochok(chatId);  // Получаем обновленное значение чочока
-        sendMessage(chatId, "Ваш чочок был изменен на " + randomChange + " см. Текущий размер вашего чочок:  " + chochok + " см");
+        sendMessage(chatId, "@" + username + ", ваш чочок был изменен на " + randomChange + " см.\n Текущий размер вашего чочок:  " + chochok + " см");
     }
 
 
