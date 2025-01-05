@@ -55,9 +55,9 @@ public class MyBot extends TelegramLongPollingBot {
                                      "/EnKattaChochoktor - выводит список всех участников с самым большим чочок.\n\nПриятного общения с ботом!";
                 sendMessage(chatId, infoMessage);
             } else if (messageText.equals("/chochok")) {
-                if (!dbManager.isUserRegistered(chatId, username)) {
+                if (!dbManager.isUserRegistered(chatId, firstName)) {
                     dbManager.registerUser(chatId, username, firstName, lastName);
-                    sendMessage(chatId, "Вы были успешно зарегистрированы! Теперь можно использовать команду /chochok.");
+                    sendMessage(chatId, "Вы были успешно зарегистрированы! \nТеперь можно использовать команду /chochok.");
                 } else {
                     updateChochok(chatId, username);
                 }

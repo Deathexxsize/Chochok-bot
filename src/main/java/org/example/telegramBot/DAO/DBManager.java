@@ -29,14 +29,14 @@ public class DBManager implements UserDaoImpl {
         return connection;
     }
 
-    public boolean isUserRegistered(Long chatId, String username) {
-        String query = "SELECT COUNT(*) FROM users WHERE chat_id = ?, username = ?";
+    public boolean isUserRegistered(Long chatId, String first_name) {
+        String query = "SELECT COUNT(*) FROM users WHERE chat_id = ? AND first_name = ?";
 
         try (Connection connection = connect();
              PreparedStatement preparedStatement = connection.prepareStatement(query)) {
 
             preparedStatement.setLong(1, chatId);
-            preparedStatement.setString(2, username);
+            preparedStatement.setString(2, first_name);
             ResultSet resultSet = preparedStatement.executeQuery();
 
             if (resultSet.next() && resultSet.getInt(1) > 0) {
@@ -61,12 +61,13 @@ public class DBManager implements UserDaoImpl {
             preparedStatement.setString(4, lastName);
             preparedStatement.setInt(5, 0);
 
-            preparedStatement.executeQuery();
-
+            preparedStatement.executeUpdate();
+            System.out.println("User registered: " + firstName);
         } catch (SQLException error) {
             error.printStackTrace();
         }
     }
+
 
     @Override
     public int getChochok(Long chatId) {
